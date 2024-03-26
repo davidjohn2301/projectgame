@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import { useAuthStore } from 'store/auth'
 import { useNavigate } from 'react-router-dom'
 import { Timestamp, addDoc, collection } from 'firebase/firestore'
+import { formatDate } from 'utils/dateFormat'
 
 const initialState = {
   userId: '',
@@ -18,6 +19,7 @@ function FormDeposite() {
   const [state, setState] = useState(initialState)
   const user = useAuthStore(state => state.user)
   const id = useAuthStore(state => state.user.id)
+
   const availability = useAuthStore(state => state.setUserAvailiableWithdraw)
   const { userId, amount, txhash } = state
   const navigate = useNavigate()
@@ -35,7 +37,8 @@ function FormDeposite() {
       try {
         const deposite = addDoc(collection(firestore, 'deposite'), {
           userId: id,
-          createdAt: Timestamp.now().toDate().toString(),
+          email: user.email,
+          createdAt: formatDate(Date.now()),
           amount: amount,
           txhash: txhash,
           status: 'Pending...'
@@ -59,7 +62,7 @@ function FormDeposite() {
         <div className="max-h-screen overflow-y-auto rounded shadow-lg">
           <div className="relative rounded-lg bg-white shadow dark:bg-gray-700">
             {/* <!-- Modal header --> */}
-            <div className="flex items-center justify-center rounded-t border-b p-4 md:p-5 dark:border-gray-600">
+            <div className="md:p-5 flex items-center justify-center rounded-t border-b p-4 dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Deposite BEP-20 USDT
               </h3>
@@ -77,7 +80,7 @@ function FormDeposite() {
               </div>
             </div>
             {/* <!-- Modal body --> */}
-            <div className="p-4 md:p-5">
+            <div className="md:p-5 p-4">
               <form
                 className="space-y-4"
                 action="submit"
@@ -104,7 +107,10 @@ function FormDeposite() {
                     className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Transaction Details: Example:
-                    <a href="https://bscscan.com/tx/0x9ba9be436605b770b6d3b7ea575dfd799c4e16a5b9ead112fdba4f874e5c030a">
+                    <a
+                      href="https://bscscan.com/tx/0x9ba9be436605b770b6d3b7ea575dfd799c4e16a5b9ead112fdba4f874e5c030a"
+                      className="text-green-500"
+                    >
                       {' '}
                       https://bscscan.com/tx/0x9ba9be436605b.....fdba4f874e5c030a
                     </a>

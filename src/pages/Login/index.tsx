@@ -23,15 +23,14 @@ export function LoginPage() {
 
   async function checkLocalStorage() {
     const local = localStorage.length
-    console.log(local)
+
     if (local > 0) {
       const localStore = localStorage.getItem('refId')
       if (localStore === null) {
         setLocalStorage(false)
-        console.log(localStore)
       } else {
         setInputValue(localStore)
-        console.log(inputValue)
+
         setLocalStorage(true)
       }
       return isLocalStorage
@@ -50,7 +49,7 @@ export function LoginPage() {
     const idRef = collection(firestore, 'users/')
     const q = query(idRef, where('userId', '==', inputValue))
     const querry = await getDocs(q)
-    console.log(querry.size)
+
     try {
       if (querry.size > 0) {
         setRefId(true)
@@ -71,7 +70,6 @@ export function LoginPage() {
 
         await signIn(inputValue)
         setUserFireStore(inputValue)
-        console.log(inputValue)
         navigate('/plinko')
       }
     } catch (error) {

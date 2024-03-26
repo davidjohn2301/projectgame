@@ -12,6 +12,7 @@ import { Timestamp } from 'firebase/firestore'
 import { produce } from 'immer'
 import { auth, database, firestore } from 'lib/firebase'
 import toast from 'react-hot-toast'
+import { formatDate } from 'utils/dateFormat'
 import { random } from 'utils/random'
 import { create } from 'zustand'
 
@@ -112,7 +113,7 @@ export const useAuthStore = create<State>((setState, getState) => ({
           userId: userId,
           total: amount,
           ballValue: ballValue,
-          createdAt: Timestamp.now().toDate().toString()
+          createdAt: formatDate(Date.now())
         })
       }
     } catch (e) {
@@ -124,14 +125,15 @@ export const useAuthStore = create<State>((setState, getState) => ({
     const docs = collection(firestore, 'users/')
     const q = query(docs, where('userId', '==', userId))
     const querySnapshot = await getDocs(q)
+    console.log(querySnapshot.size)
     try {
-      if (getState().isAuth && querySnapshot.size < 0) {
+      if (querySnapshot.size == 0) {
         const docRef = await addDoc(collection(firestore, 'users/'), {
           userId: userId,
           refId: refId,
-          createdAt: Timestamp.now().toDate().toString(),
+          createdAt: formatDate(Date.now()),
           name: localStorage.getItem('name'),
-          email: localStorage.getItem('email'),
+          email: auth.currentUser?.email,
           profilePic: localStorage.getItem('profilePic'),
           availability: false
         })

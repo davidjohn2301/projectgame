@@ -43,7 +43,7 @@ export function Contribute() {
     }
   }
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-primary text-text">
+    <div className="sm:mx-auto sm:rounded-lg md:mx-auto lg:mx-auto flex flex-col items-center justify-center gap-2 rounded-md bg-primary text-text">
       <div className="relative mx-auto w-32 rounded-full">
         {user.profilePic ? (
           <img
@@ -87,7 +87,7 @@ export function Contribute() {
         </span>
       </div>
       <div className="flex flex-row items-center justify-center gap-3 p-1">
-        <span className="text-2xl font-bold text-green-600 sm:text-xl">
+        <span className="sm:text-xl text-2xl font-bold text-green-600">
           <UsersThree size={32} />
         </span>
         <div className="flex items-center justify-center rounded-lg outline outline-offset-2 outline-cyan-500">
@@ -122,7 +122,7 @@ export function Contribute() {
         )}
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-3 p-3 ">
+      <div className="sm:mx-auto md:mx-auto lg:mx-auto flex max-w-sm flex-col items-center justify-center gap-3 p-3">
         <strong className="items-center justify-center rounded-lg outline outline-offset-2 outline-cyan-500">
           Deposite History
         </strong>
