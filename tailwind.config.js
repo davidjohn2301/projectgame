@@ -11,9 +11,6 @@ module.exports = {
         purpleDark: '#3bdb88'
       }
     },
-    screens: {
-      xs: '475px'
-    }
   },
   plugins: []
 }

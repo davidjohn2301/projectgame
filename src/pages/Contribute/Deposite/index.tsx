@@ -41,7 +41,7 @@ function FormDeposite() {
           createdAt: formatDate(Date.now()),
           amount: amount,
           txhash: txhash,
-          status: 'Pending...'
+          status: 'Pending'
         })
         availability(user)
         toast.success('Deposite successfully')
@@ -58,7 +58,7 @@ function FormDeposite() {
 
   return (
     <div className="items-center justify-center ">
-      <div className="mb-200 flex h-fit w-screen items-center justify-center">
+      <div className="flex h-fit items-center justify-center">
         <div className="max-h-screen overflow-y-auto rounded shadow-lg">
           <div className="relative rounded-lg bg-white shadow dark:bg-gray-700">
             {/* <!-- Modal header --> */}

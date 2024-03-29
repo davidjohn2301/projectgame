@@ -43,7 +43,7 @@ function Withdraw() {
             createdAt: formatDate(Date.now()),
             amount: amount,
             address: address,
-            status: 'Pending...'
+            status: 'Pending'
           })
           user.decrementBalance(amount)
         }

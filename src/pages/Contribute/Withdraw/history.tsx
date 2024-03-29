@@ -77,12 +77,12 @@ function History() {
               <td className="p-2 text-white">{withdraw.createdAt}</td>
               <td className="p-2 text-white">{withdraw.amount}</td>
               <td className="p-2 text-white">
-                {withdraw.address.slice(0, 23)}
+                {withdraw.address.slice(10)}......{withdraw.address.slice(-10)}
               </td>
               <td
                 className={classNames('p-2', {
                   'text-green-600': withdraw.status === 'Success',
-                  'text-cyan-400': withdraw.status === 'Pending...',
+                  'text-cyan-400': withdraw.status === 'Pending',
                   'text-red-600': withdraw.status === 'Fail'
                 })}
               >

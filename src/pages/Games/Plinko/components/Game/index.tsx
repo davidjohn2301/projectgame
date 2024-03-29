@@ -281,7 +281,7 @@ export function Game() {
 
   return (
     <div className="">
-      <div className="md:px-30 flex h-fit flex-col-reverse items-center  justify-center gap-4 md:flex-row lg:px-80">
+      <div className="md:px-10 flex h-fit flex-col-reverse items-center justify-center md:flex-row lg:px-20">
         <BetActions
           inGameBallsCount={inGameBallsCount}
           onChangeLines={setLines}

@@ -92,6 +92,7 @@ export const useAuthStore = create<State>((setState, getState) => ({
   isWalletLoading: false,
   isAuth: false,
   isAdmin: false,
+  
   setBalance: (balance: number) => {
     try {
       setState(
