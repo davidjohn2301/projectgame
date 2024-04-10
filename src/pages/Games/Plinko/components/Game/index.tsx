@@ -150,11 +150,11 @@ export function Game() {
       console.log(ballX)
       const ballColor = ballValue <= 0 ? colors.text : colors.purple
       const ball = Bodies.circle(ballX, 30, ballConfig.ballSize, {
-        restitution: 0.8,
-        friction: 0.35,
+        restitution: 0.8, //chinh toc do va cham
+        friction: 0.14, //chinh toc do truot
         label: `ball-${ballValue}`,
         id: new Date().getTime(),
-        frictionAir: 0.15,
+        frictionAir: 0.045, //chinh toc do nay
         collisionFilter: {
           group: -1
         },
@@ -259,26 +259,28 @@ export function Game() {
     multiplierSong.play()
     setLastMultipliers(prev => [multiplierValue, prev[0], prev[1], prev[2]])
 
-    const newBalance = +ballValue * multiplierValue
-    const newBalance1 = +ballValue * multiplierValue * 0.99 //set refferral earnings
-    switch (multiplierValue) {
-      case 0.5:
-        await incrementCurrentBalance(newBalance)
-        await history(newBalance, +ballValue, multiplierValue)
-        break
-      case 0.3:
-        await incrementCurrentBalance(+ballValue * multiplierValue)
-        await history(newBalance, +ballValue, multiplierValue)
-        break
-      case 1:
-        await incrementCurrentBalance(+ballValue * multiplierValue)
-        await history(newBalance, +ballValue, multiplierValue)
-        break
-      default:
-        await incrementCurrentBalance(newBalance1)
-        await history(newBalance1, +ballValue, multiplierValue)
-        break
-    }
+    if (+ballValue <= 0) return
+      const newBalance = +ballValue * multiplierValue
+      const newBalance1 = +ballValue * multiplierValue * 0.99 //set refferral earnings
+      switch (multiplierValue) {
+        case 0.5:
+          await incrementCurrentBalance(newBalance)
+          await history(newBalance, +ballValue, multiplierValue)
+          break
+        case 0.3:
+          await incrementCurrentBalance(+ballValue * multiplierValue)
+          await history(newBalance, +ballValue, multiplierValue)
+          break
+        case 1:
+          await incrementCurrentBalance(+ballValue * multiplierValue)
+          await history(newBalance, +ballValue, multiplierValue)
+          break
+        default:
+          await incrementCurrentBalance(newBalance1)
+          await history(newBalance1, +ballValue, multiplierValue)
+          break
+      }
+    
   }
 
   async function onBodyCollision(event: IEventCollision<Engine>) {
