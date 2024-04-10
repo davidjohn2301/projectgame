@@ -44,80 +44,81 @@ export function ScoreBoardPage() {
     }
   }, [])
 
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
-      <div className="flex w-4/5 flex-col gap-3 rounded bg-primary p-4 text-text">
-        <div className="rounded-md bg-background p-1 text-center text-2xl">
-          <strong>TOP 10</strong>
-          <br /> Best players
-          <br />
-          <span className="text-xs">
-          Click on a player to see their profile
-          </span>
-        </div>
-        {userProfile ? (
-          <div className="mx-auto flex w-full  flex-col items-center justify-center">
-            <Profile {...userProfile} />
-            <button
-              onClick={() => setUserProfile(undefined)}
-              className="rounded-full bg-background p-2 text-text"
-            >
-              <ArrowLeft weight="fill" />
-            </button>
+  return ( 
+      <div className="flex h-full flex-col items-center justify-center gap-4">
+        <div className="flex w-4/5 flex-col gap-3 rounded bg-primary p-4 text-text">
+          
+          <div className="rounded-md bg-background p-1 text-center text-2xl">
+            <strong>TOP 10</strong>
+            <br /> Best players
+            <br />
+            <span className="text-xs">
+              Click on a player to see their profile
+            </span>
           </div>
-        ) : (
-          <div className="flex w-full flex-col gap-2 lg:mx-auto lg:w-4/5">
-            {isLoading ? (
-              <div className="flex w-full flex-col items-center justify-center py-4">
-                <CircleDashed
-                  className="animate-spin"
-                  size="40"
-                  weight="bold"
-                />
-                <span className="mt-1 text-sm font-bold">
-                Loading scores...
-                </span>
-              </div>
-            ) : (
-              <>
-                {scoreBoard.map(
-                  (
-                    { currentBalance, user: { name, profilePic, uid } },
-                    index
-                  ) => (
-                    <ScoreBoardPlayerItem
-                      key={uid}
-                      onClick={() =>
-                        setUserProfile({
-                          currentBalance,
+          {userProfile ? (
+            <div className="mx-auto flex w-full  flex-col items-center justify-center">
+              <Profile {...userProfile} />
+              <button
+                onClick={() => setUserProfile(undefined)}
+                className="rounded-full bg-background p-2 text-text"
+              >
+                <ArrowLeft weight="fill" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex w-full flex-col gap-2 lg:mx-auto lg:w-4/5">
+              {isLoading ? (
+                <div className="flex w-full flex-col items-center justify-center py-4">
+                  <CircleDashed
+                    className="animate-spin"
+                    size="40"
+                    weight="bold"
+                  />
+                  <span className="mt-1 text-sm font-bold">
+                    Loading scores...
+                  </span>
+                </div>
+              ) : (
+                <>
+                  {scoreBoard.map(
+                    (
+                      { currentBalance, user: { name, profilePic, uid } },
+                      index
+                    ) => (
+                      <ScoreBoardPlayerItem
+                        key={uid}
+                        onClick={() =>
+                          setUserProfile({
+                            currentBalance,
+                            name,
+                            profilePic,
+                            uid,
+                            position: index
+                          })
+                        }
+                        position={index}
+                        player={{
                           name,
                           profilePic,
                           uid,
-                          position: index
-                        })
-                      }
-                      position={index}
-                      player={{
-                        name,
-                        profilePic,
-                        uid,
-                        currentBalance
-                      }}
-                    />
-                  )
-                )}
-              </>
-            )}
-          </div>
-        )}
+                          currentBalance
+                        }}
+                      />
+                    )
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        <Link
+          to="/plinko"
+          className="mb-4 flex items-center justify-center gap-4 rounded-lg bg-purpleDark p-4 text-lg font-bold text-text shadow-md transition-colors hover:bg-purple"
+        >
+          <Play weight="fill" size="20" />
+          TO PLAY
+        </Link>
       </div>
-      <Link
-        to="/plinko"
-        className="mb-4 flex items-center justify-center gap-4 rounded-lg bg-purpleDark p-4 text-lg font-bold text-text shadow-md transition-colors hover:bg-purple"
-      >
-        <Play weight="fill" size="20" />
-        TO PLAY
-      </Link>
-    </div>
   )
 }

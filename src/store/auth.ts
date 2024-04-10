@@ -6,7 +6,9 @@ import {
   addDoc,
   getDoc,
   getDocs,
-  where
+  where,
+  setDoc,
+  doc
 } from 'firebase/firestore'
 import { Timestamp } from 'firebase/firestore'
 import { produce } from 'immer'
@@ -46,16 +48,16 @@ interface State {
   signOut: () => Promise<void>
   setUser: (user: User) => void
   setUserFirestore: (refId: string) => void
-  setUserAvailiableWithdraw: (user: User) => void
   isAuthLoading: boolean
   isWalletLoading: boolean
   setBalance: (balance: number) => void
   setUserdb: (balance: number) => void
-  setHistory: (amount: number, ballValue: Number) => Promise<void>
+  setHistory: (amount: number, ballValue: Number, multiplierValue: number) => Promise<void>
   setBalanceOnDatabase: (balance: number) => Promise<void>
   incrementBalance: (amount: number) => Promise<void>
   decrementBalance: (amount: number) => Promise<void>
   redeemGift: () => Promise<void>
+  // setRefEarn: (amount: number) => void
 }
 
 function storeUser(user: User) {
@@ -106,15 +108,20 @@ export const useAuthStore = create<State>((setState, getState) => ({
       console.error('setBalanceError', error)
     }
   },
-  setHistory: async (amount: number, ballValue: Number) => {
+  setHistory: async (amount: number, ballValue: Number, multiplierValue: number) => {
     const userId = getState().user.id
+    const refId = localStorage.getItem('refId')
     try {
       if (getState().isAuth) {
         const docRef = await addDoc(collection(firestore, 'history/'), {
           userId: userId,
+          refId: refId,
           total: amount,
           ballValue: ballValue,
-          createdAt: formatDate(Date.now())
+          multiplierValue: multiplierValue,
+          email: getState().user.email,
+          createdAt: formatDate(Date.now()),
+          earn: false
         })
       }
     } catch (e) {
@@ -129,7 +136,7 @@ export const useAuthStore = create<State>((setState, getState) => ({
     console.log(querySnapshot.size)
     try {
       if (querySnapshot.size == 0) {
-        const docRef = await addDoc(collection(firestore, 'users/'), {
+        const docRef = await setDoc(doc(firestore,"users/", userId), {
           userId: userId,
           refId: refId,
           createdAt: formatDate(Date.now()),
@@ -159,6 +166,18 @@ export const useAuthStore = create<State>((setState, getState) => ({
       console.error('Error adding document: ', e)
     }
   },
+  // setRefEarn : async (balance: number) => {
+  //   if(balance > 1){
+  //     try {
+  //       const refEarn = addDoc(collection(firestore, 'refEarn'),{
+  //         createdAt: formatDate(Date.now()),
+
+  //       })
+  //     } catch (error) {
+        
+  //     }
+  //   }
+  // },
   setBalanceOnDatabase: async (balance: number) => {
     try {
       if (getState().isAuth) {
@@ -206,7 +225,7 @@ export const useAuthStore = create<State>((setState, getState) => ({
   incrementBalance: async (amount: number) => {
     try {
       setState(state => ({ ...state, isWalletLoading: true }))
-      getState().setUserdb(getState().wallet.balance + amount)
+      // getState().setUserdb(getState().wallet.balance + amount)
       await getState().setBalanceOnDatabase(getState().wallet.balance + amount)
       setState(state => ({ ...state, isWalletLoading: false }))
     } catch (error) {
@@ -279,21 +298,6 @@ export const useAuthStore = create<State>((setState, getState) => ({
           state.user = user
           state.isAuth = true
           state.isAuthLoading = false
-        })
-      )
-    } catch (error) {
-      toast.error('An error occurred while updating user data')
-      console.error('setUserError', error)
-    }
-  },
-  setUserAvailiableWithdraw: (user: User) => {
-    try {
-      setState(
-        produce<State>(state => {
-          state.user = user
-          state.isAuth = true
-          state.isAuthLoading = false
-          state.user.availability = true
         })
       )
     } catch (error) {

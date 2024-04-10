@@ -4,6 +4,11 @@ interface MultiplierHistoryProps {
 export function MultiplierHistory({
   multiplierHistory
 }: MultiplierHistoryProps) {
+  multiplierHistory.map((multipler, index) =>{
+    if(multipler > 1){
+      // console.log(multipler, index)
+    }
+  })
   return (
     <div className="absolute right-4 top-40 flex w-16 flex-col gap-1 overflow-hidden rounded-md bg-background md:top-60">
       {multiplierHistory.map((multiplier, index) => {

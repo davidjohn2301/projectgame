@@ -11,6 +11,9 @@ import { RequireAuth } from './components/RequireAuth'
 import Result from 'pages/Result'
 import Deposite from 'pages/Contribute/Deposite'
 import Withdraw from 'pages/Contribute/Withdraw'
+import Rewards from 'pages/Rewards'
+// import { HomePage } from 'pages/HomePage'
+// import { Home } from 'pages/home'
 
 export function Routes() {
   return (
@@ -25,8 +28,10 @@ export function Routes() {
             <Route path="/deposite" element={<Deposite />} />
             <Route path="/withdraw" element={<Withdraw />} />
             <Route path="/scores" element={<ScoreBoardPage />} />
+            <Route path='/rewards' element={<Rewards/>}/>
           </Route>
           <Route path="/" element={<ScoreBoardPage />} />
+          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

@@ -87,9 +87,11 @@ export function Contribute() {
         </span>
       </div>
       <div className="flex flex-row items-center justify-center gap-3 p-1">
+        <Link to={'/rewards'}>
         <span className="sm:text-xl text-2xl font-bold text-green-600">
           <UsersThree size={32} />
         </span>
+        </Link>
         <div className="flex items-center justify-center rounded-lg outline outline-offset-2 outline-cyan-500">
           {user.id}
         </div>

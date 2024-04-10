@@ -3,7 +3,7 @@ import { firestore } from 'lib/firebase'
 import { toast } from 'react-hot-toast'
 import { useAuthStore } from 'store/auth'
 import { useNavigate } from 'react-router-dom'
-import { Timestamp, addDoc, collection } from 'firebase/firestore'
+import { Timestamp, addDoc, collection, doc, getDoc } from 'firebase/firestore'
 import { formatDate } from 'utils/dateFormat'
 
 const initialState = {
@@ -19,42 +19,55 @@ function Withdraw() {
   const id = useAuthStore(state => state.user.id)
   const balance = useAuthStore(state => state.wallet.balance)
   const { amount, address } = state
+  
+  const navigate = useNavigate()
   const user = useAuthStore()
 
-  const availability = useAuthStore(state => state.user.availability)
-  console.log(availability)
-  const navigate = useNavigate()
+  const checkAvailability = async () => {
+    try { 
+      const user = doc(firestore, "users", id)
+      const snapshot = await getDoc(user)
+      const avai = snapshot.get("availability")
 
+      return avai
+    } catch (error) {
+      
+    }
+   
+  }
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target
     setState({ ...state, [name]: value })
     console.log(state)
   }
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     if (!amount || !address) {
       toast.error('Please enter value')
     } else {
-      try {
-        if (balance > 0 && balance >= amount && availability === true) {
-          const withdraw = addDoc(collection(firestore, 'withdraw'), {
-            userId: id,
-            createdAt: formatDate(Date.now()),
-            amount: amount,
-            address: address,
-            status: 'Pending'
-          })
-          user.decrementBalance(amount)
+      let availability = await checkAvailability()
+      if (availability == true) {
+        try {
+          if (balance > 0 && balance >= amount) {
+            const withdraw = addDoc(collection(firestore, 'withdraw/'), {
+              userId: id,
+              createdAt: formatDate(Date.now()),
+              amount: amount,
+              address: address,
+              status: 'Pending'
+            })
+            user.decrementBalance(amount)
+          }
+          toast.success('Withdraw order successfully')
+          setTimeout(() => navigate('/plinko'), 500)
+        } catch (error) {
+          console.log(error)
         }
-        toast.success('Withdraw order successfully')
-        setTimeout(() => navigate('/plinko'), 500)
-      } catch (error) {
+      }else{
         toast.error(
           'Your account is not eligible for withdrawal. Please deposit to be able to withdraw your winning reward.'
         )
-        console.log(amount, address)
-        console.log(error)
       }
     }
   }
@@ -67,7 +80,7 @@ function Withdraw() {
       <div className="mb-200 flex h-fit  items-center justify-center">
         <div className="max-h-screen overflow-y-auto rounded shadow-lg">
           <div className="relative rounded-lg bg-white shadow dark:bg-gray-700">
-            <div className="md:p-5 flex items-center justify-center rounded-t border-b p-4 dark:border-gray-600">
+            <div className="flex items-center justify-center rounded-t border-b p-4 md:p-5 dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Withdraw BEP-20 USDT
               </h3>
@@ -80,7 +93,7 @@ function Withdraw() {
               </div>
             </div>
             {/* <!-- Modal body --> */}
-            <div className="md:p-5 p-4">
+            <div className="p-4 md:p-5">
               <form
                 className="space-y-4"
                 action="submit"

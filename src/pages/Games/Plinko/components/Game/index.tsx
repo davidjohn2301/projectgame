@@ -28,11 +28,12 @@ import { FirestoreDataTable } from './components/FirestoreDataTable'
 import Notification from './components/Notification'
 
 export function Game() {
-  let total = 0
+  const [total, setTotal] = useState(Number)
   let value = 0
   // #region States
   // const userId = useAuthStore(state => state.user.id)
   const incrementCurrentBalance = useAuthStore(state => state.incrementBalance)
+  // const setRefEarn = useAuthStore(state => state.setRefEarn)
   const history = useAuthStore(state => state.setHistory)
   const engine = Engine.create()
   const [lines, setLines] = useState<LinesType>(16)
@@ -150,10 +151,10 @@ export function Game() {
       const ballColor = ballValue <= 0 ? colors.text : colors.purple
       const ball = Bodies.circle(ballX, 30, ballConfig.ballSize, {
         restitution: 0.8,
-        friction: 0.4,
+        friction: 0.35,
         label: `ball-${ballValue}`,
         id: new Date().getTime(),
-        frictionAir: 0.05,
+        frictionAir: 0.15,
         collisionFilter: {
           group: -1
         },
@@ -258,14 +259,26 @@ export function Game() {
     multiplierSong.play()
     setLastMultipliers(prev => [multiplierValue, prev[0], prev[1], prev[2]])
 
-    if (+ballValue <= 0) return
-    total = +ballValue * multiplierValue
-    value = +ballValue
-    await history(total, value)
-
-    if (+ballValue <= 0) return
     const newBalance = +ballValue * multiplierValue
-    await incrementCurrentBalance(newBalance)
+    const newBalance1 = +ballValue * multiplierValue * 0.99 //set refferral earnings
+    switch (multiplierValue) {
+      case 0.5:
+        await incrementCurrentBalance(newBalance)
+        await history(newBalance, +ballValue, multiplierValue)
+        break
+      case 0.3:
+        await incrementCurrentBalance(+ballValue * multiplierValue)
+        await history(newBalance, +ballValue, multiplierValue)
+        break
+      case 1:
+        await incrementCurrentBalance(+ballValue * multiplierValue)
+        await history(newBalance, +ballValue, multiplierValue)
+        break
+      default:
+        await incrementCurrentBalance(newBalance1)
+        await history(newBalance1, +ballValue, multiplierValue)
+        break
+    }
   }
 
   async function onBodyCollision(event: IEventCollision<Engine>) {
@@ -281,7 +294,7 @@ export function Game() {
 
   return (
     <div className="">
-      <div className="md:px-10 flex h-fit flex-col-reverse items-center justify-center md:flex-row lg:px-20">
+      <div className="flex h-fit flex-col-reverse items-center justify-center md:flex-row md:px-10 lg:px-20">
         <BetActions
           inGameBallsCount={inGameBallsCount}
           onChangeLines={setLines}

@@ -37,7 +37,7 @@ function History() {
         const items: Withdraw[] = querySnapshot.docs.map(
           doc => ({ id: doc.id, ...doc.data() } as Withdraw)
         )
-        console.log(items.slice(0, 10))
+        // console.log(items.slice(0, 10))
         setDeposits(items)
       } catch (error) {
         console.error('Error fetching data:', error)

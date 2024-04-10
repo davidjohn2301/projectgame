@@ -19,8 +19,8 @@ function FormDeposite() {
   const [state, setState] = useState(initialState)
   const user = useAuthStore(state => state.user)
   const id = useAuthStore(state => state.user.id)
+  const ref = localStorage.getItem('refId')
 
-  const availability = useAuthStore(state => state.setUserAvailiableWithdraw)
   const { userId, amount, txhash } = state
   const navigate = useNavigate()
 
@@ -37,13 +37,14 @@ function FormDeposite() {
       try {
         const deposite = addDoc(collection(firestore, 'deposite'), {
           userId: id,
+          refId: ref,
           email: user.email,
           createdAt: formatDate(Date.now()),
           amount: amount,
           txhash: txhash,
-          status: 'Pending'
+          status: 'Pending',
+          reward: false
         })
-        availability(user)
         toast.success('Deposite successfully')
         setTimeout(() => navigate('/plinko'), 500)
       } catch (error) {}

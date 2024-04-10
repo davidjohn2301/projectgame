@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@firebase/firestore": "^4.4.3",
+    "@mui/x-data-grid": "^7.1.0",
     "classnames": "^2.3.1",
     "firebase": "^9.23.0",
     "immer": "^9.0.15",
